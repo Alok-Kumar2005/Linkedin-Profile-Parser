@@ -1,9 +1,10 @@
 from langgraph.graph import StateGraph, START, END
 from pydantic import BaseModel
 from langchain_core.messages import HumanMessage, AIMessage
-from typing import Optional
+from typing import Optional, List
 from src.ai_componenet.graph.utils.jdinfo import JDInfo
 
 class AgentState(BaseModel):
     job_desc: str
     jd_info: Optional[JDInfo] = None
+    linkedin_profile: Optional[List[str]] = None

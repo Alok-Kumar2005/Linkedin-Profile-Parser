@@ -8,6 +8,7 @@ from src.ai_componenet.graph.state import AgentState
 from src.ai_componenet.get_llm import get_structured_llm, get_llm
 from src.ai_componenet.graph.utils.jdinfo import JDInfo
 from src.ai_componenet.core.prompts import jd_template
+from src.ai_componenet.graph.utils.tools import tavily_tool
 from langchain_core.prompts import PromptTemplate
 
 
@@ -24,4 +25,13 @@ def JobDescriptionNode(state: AgentState) -> AgentState:
     return AgentState(
         job_desc=state.job_desc,
         jd_info=response
+    )
+
+
+
+def LinkedInProfileNode(state: AgentState)->AgentState:
+    """Get the linkedin profile of the user on the basis of the JD"""
+    urls = tavily_tool(state.get("job_title",""))
+    return AgentState(
+        linkedin_profile = urls
     )
