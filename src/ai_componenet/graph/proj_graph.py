@@ -5,7 +5,7 @@ sys.path.insert(0, str(project_root))
 
 from functools import lru_cache
 from langgraph.graph import END, START, StateGraph
-from src.ai_componenet.graph.nodes import JobDescriptionNode, LinkedInProfileNode, FetchURLNode
+from src.ai_componenet.graph.nodes import JobDescriptionNode, LinkedInProfileNode, FetchURLNode, ScoringNode
 from src.ai_componenet.graph.state import AgentState
 
 
@@ -19,12 +19,14 @@ def create_graph():
     workflow.add_node("job_description", JobDescriptionNode)
     workflow.add_node("linkedin_profile", LinkedInProfileNode)
     workflow.add_node("fetch_url", FetchURLNode)
+    workflow.add_node("scoring_user", ScoringNode)
     
     # Add edges to define the flow
     workflow.add_edge(START, "job_description")
     workflow.add_edge("job_description", "linkedin_profile")
     workflow.add_edge("linkedin_profile", "fetch_url")
-    workflow.add_edge("fetch_url", END)
+    workflow.add_edge("fetch_url", "scoring_user")
+    workflow.add_edge("scoring_user", END)
     
     # Compile the graph
     return workflow.compile()
@@ -60,3 +62,6 @@ if __name__ == "__main__":
     print("*="*50)
     print(result["profile_data"])
     print("*="*50)
+    print(result["fit_score"])
+    print("*="*50)
+    print(result["score_breakdown"])

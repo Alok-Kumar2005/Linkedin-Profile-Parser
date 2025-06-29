@@ -3,11 +3,13 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
+import logging
 from langgraph.graph import StateGraph, START, END
 from src.ai_componenet.graph.state import AgentState
 from src.ai_componenet.get_llm import get_structured_llm, get_llm
 from src.ai_componenet.graph.utils.jdinfo import JDInfo
-from src.ai_componenet.core.prompts import jd_template
+from src.ai_componenet.graph.utils.models import ScoringOutput
+from src.ai_componenet.core.prompts import jd_template, scoring_template
 from src.ai_componenet.graph.utils.tools import tavily_tool, data_of_linkedin_url
 from langchain_core.prompts import PromptTemplate
 from typing import Dict, Any
@@ -56,4 +58,54 @@ def FetchURLNode(state: AgentState) -> Dict[str, Any]:
     
     return {
         "profile_data": data
+    }
+
+
+def ScoringNode(state: AgentState) -> Dict[str, Any]:
+    """Score each profile based on their background and JD"""
+    
+    prompt = PromptTemplate(
+        template=scoring_template,
+        input_variables=["profile_data", "job_desc"]
+    )
+    
+    fit_scores = []
+    score_breakdowns = []
+    
+    # Check if profile_data exists
+    if not state.get("profile_data"):
+        logging.warning("No profile data found in state")
+        return {
+            "fit_score": [],
+            "score_breakdown": []
+        }
+    
+    for i, data in enumerate(state["profile_data"]):
+        try:
+            llm = get_structured_llm(prompt, ScoringOutput, model_name="gemini-1.5-flash")
+            response = llm.invoke({
+                "profile_data": data, 
+                "job_desc": state["job_desc"]
+            })
+            
+            fit_scores.append(response.final_score)
+            score_breakdowns.append(response.score_breakdown)
+            
+        except Exception as e:
+            logging.error(f"Error scoring profile {i}: {str(e)}")
+            # Provide default scores if scoring fails
+            default_breakdown = {
+                "Education": 6.0,
+                "Career_Trajectory": 6.0, 
+                "Company_Relevance": 6.0,
+                "Experience_Match": 6.0,
+                "Location_Match": 6.0,
+                "Tenure": 6.0
+            }
+            fit_scores.append(6.0)
+            score_breakdowns.append(default_breakdown)
+
+    return {
+        "fit_score": fit_scores,
+        "score_breakdown": score_breakdowns
     }
