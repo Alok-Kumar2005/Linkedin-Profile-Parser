@@ -41,4 +41,10 @@ if __name__ == "__main__":
                 Must be able to work in Mountain View, CA full-time onsite
                 Excited to build product-facing features from ML research
             """
-    graph.invoke({"job_desc": job_desc})
+    result = graph.invoke({"job_desc": job_desc})
+    print(result)
+    print("="*100)
+    print(result.get("jd_info"))
+    print("="*100)
+    print(result.get("job_desc"))
+    print("="*100)
