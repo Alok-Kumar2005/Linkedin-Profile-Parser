@@ -5,7 +5,7 @@ sys.path.insert(0, str(project_root))
 
 from functools import lru_cache
 from langgraph.graph import END, START, StateGraph
-from src.ai_componenet.graph.nodes import JobDescriptionNode, LinkedInProfileNode, FetchURLNode, ScoringNode
+from src.ai_componenet.graph.nodes import JobDescriptionNode, LinkedInProfileNode, FetchURLNode, ScoringNode, BestCandidateNode
 from src.ai_componenet.graph.state import AgentState
 
 
@@ -20,13 +20,15 @@ def create_graph():
     workflow.add_node("linkedin_profile", LinkedInProfileNode)
     workflow.add_node("fetch_url", FetchURLNode)
     workflow.add_node("scoring_user", ScoringNode)
+    workflow.add_node("best_candidate", BestCandidateNode)
     
     # Add edges to define the flow
     workflow.add_edge(START, "job_description")
     workflow.add_edge("job_description", "linkedin_profile")
     workflow.add_edge("linkedin_profile", "fetch_url")
     workflow.add_edge("fetch_url", "scoring_user")
-    workflow.add_edge("scoring_user", END)
+    workflow.add_edge("scoring_user", "best_candidate")
+    workflow.add_edge("best_candidate", END)
     
     # Compile the graph
     return workflow.compile()
@@ -48,7 +50,13 @@ if __name__ == "__main__":
         "job_desc": job_desc,
         "jd_info": None,
         "linkedin_profile": None,
-        "profile_data": None
+        "profile_data": None,
+        "fit_score": None,
+        "score_breakdown": None,
+        "best_candidate_profile": None,
+        "best_candidate_score": None,
+        "best_candidate_breakdown": None,
+        "outreach_message": None
     }
     
     result = graph.invoke(initial_state)
@@ -65,3 +73,5 @@ if __name__ == "__main__":
     print(result["fit_score"])
     print("*="*50)
     print(result["score_breakdown"])
+    print("="*500)
+    print(result["outreach_message"])

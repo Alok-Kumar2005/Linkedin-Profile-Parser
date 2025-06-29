@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 import json
 
 class ScoringOutput(BaseModel):
@@ -19,13 +19,10 @@ class ScoringOutput(BaseModel):
     def parse_score_breakdown(cls, v):
         if isinstance(v, str):
             try:
-                # Parse JSON string to dictionary
                 return json.loads(v)
             except json.JSONDecodeError:
-                # If JSON parsing fails, try to extract using regex
                 import re
                 scores = {}
-                # Look for patterns like "Education": 7.5
                 patterns = re.findall(r'"([^"]+)":\s*(\d+\.?\d*)', v)
                 for key, value in patterns:
                     scores[key] = float(value)
@@ -34,3 +31,9 @@ class ScoringOutput(BaseModel):
             return v
         else:
             return {}
+
+class OutreachOutput(BaseModel):
+    outreach_message: str = Field(
+        ..., 
+        description="Personalized outreach message for the best candidate"
+    )

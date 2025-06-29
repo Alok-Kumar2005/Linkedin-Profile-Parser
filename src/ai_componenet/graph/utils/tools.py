@@ -1,15 +1,25 @@
+import sys
+from pathlib import Path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
 import os
 import base64
 import re
 import json
 import requests
+import logging
 from io import BytesIO
 from typing import List
 from PyPDF2 import PdfReader
 from langchain_tavily import TavilySearch
+from src.ai_componenet.logger import logging
+from src.ai_componenet.exception import CustomException
 from dotenv import load_dotenv
 load_dotenv()
 
+
+logger = logging.getLogger(__name__)
 
 tavily_api_key = os.getenv("TAVILY_API_KEY")
 if not tavily_api_key:
@@ -35,6 +45,7 @@ def tavily_tool(job_position: str, max_result: int = 5) -> List[str]:
         List[str]: List of LinkedIn profile URLs
     """
     try:
+        logger.info("Enter Tavily tool ----> ")
         tool = TavilySearch(max_results=max_result, topic="general")
         query = (
             f'site:linkedin.com/in '
@@ -49,10 +60,11 @@ def tavily_tool(job_position: str, max_result: int = 5) -> List[str]:
             for item in result['results']:
                 if 'url' in item:
                     urls.append(item['url'])
+        logger.info("tavily tool Executed completed successfully   <------------")
         
         return urls
     
-    except Exception as e:
+    except CustomException as e:
         print(f"Error in tavily_tool: {e}")
         return []  # Return empty list on error rather than crashing
 
@@ -68,6 +80,7 @@ def data_of_linkedin_url(linkedin_url: str) -> str:
         str: Extracted text data from the LinkedIn profile PDF
     """
     try:
+        logger.info("Enter data_of_linkedin_url tool -----------> ")
         url = "https://fresh-linkedin-profile-data.p.rapidapi.com/get-profile-pdf-cv"
         querystring = {"linkedin_url": linkedin_url}
         headers = {
@@ -103,11 +116,12 @@ def data_of_linkedin_url(linkedin_url: str) -> str:
                 full_text.append(text)
         
         text = "\n".join(full_text)
+        logger.info("data_of_linkedin_url successfully executed successfully")
         return text
         
     except requests.RequestException as e:
         print(f"Request error for URL {linkedin_url}: {e}")
         return ""
-    except Exception as e:
+    except CustomException as e:
         print(f"Error processing URL {linkedin_url}: {e}")
         return ""

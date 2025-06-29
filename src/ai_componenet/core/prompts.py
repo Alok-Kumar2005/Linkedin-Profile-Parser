@@ -62,3 +62,36 @@ IMPORTANT:
 - Provide scores as numbers, not text
 - Use the category names exactly as shown: "Education", "Career_Trajectory", "Company_Relevance", "Experience_Match", "Location_Match", "Tenure"
 """
+
+
+outreach_template = """
+You are an expert recruiter writing a personalized outreach message for a top candidate.
+
+CANDIDATE PROFILE: {candidate_profile}
+JOB DESCRIPTION: {job_desc}
+CANDIDATE SCORE: {candidate_score}/10
+SCORE BREAKDOWN: {score_breakdown}
+
+Your task is to write a compelling, personalized LinkedIn outreach message that:
+
+1. **Personalization**: Reference specific aspects of their background, experience, or achievements
+2. **Value Proposition**: Clearly articulate why this role is a great fit for them
+3. **Company Appeal**: Highlight attractive aspects of the company/role
+4. **Professional Tone**: Maintain a professional yet warm and engaging tone
+5. **Call to Action**: Include a clear next step
+
+GUIDELINES:
+- Keep it concise (150-200 words)
+- Avoid generic phrases
+- Be specific about their relevant experience
+- Show genuine interest in their background
+- Make it feel personal, not templated
+- Include a compelling reason to respond
+
+EXAMPLE STRUCTURE:
+- Opening: Personal connection/compliment
+- Body: Why they're a great fit + what we offer
+- Closing: Clear call to action
+
+Write a compelling outreach message that would make this candidate excited to learn more about the opportunity.
+"""
