@@ -1,10 +1,9 @@
-from langgraph.graph import StateGraph, START, END
-from pydantic import BaseModel
-from langchain_core.messages import HumanMessage, AIMessage
-from typing import Optional, List
+from typing import Optional, List, TypedDict
 from src.ai_componenet.graph.utils.jdinfo import JDInfo
 
-class AgentState(BaseModel):
+
+class AgentState(TypedDict):
     job_desc: str
-    jd_info: Optional[JDInfo] = None
-    linkedin_profile: Optional[List[str]] = None
+    jd_info: Optional[JDInfo]
+    linkedin_profile: Optional[List[str]]
+    profile_data: Optional[List[str]]
