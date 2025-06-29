@@ -5,7 +5,7 @@ sys.path.insert(0, str(project_root))
 
 from functools import lru_cache
 from langgraph.graph import END, START, StateGraph
-from src.ai_componenet.graph.nodes import JobDescriptionNode
+from src.ai_componenet.graph.nodes import JobDescriptionNode, LinkedInProfileNode
 from src.ai_componenet.graph.state import AgentState
 
 
@@ -13,7 +13,9 @@ from src.ai_componenet.graph.state import AgentState
 def get_graph():
     graph = StateGraph(AgentState)
     graph.add_node("job_description", JobDescriptionNode)
+    graph.add_node("linkedin_profile", LinkedInProfileNode)
     graph.add_edge(START, "job_description")
+    graph.add_edge("job_description", "linkedin_profile")
     graph.add_edge("job_description", END)
     return graph
 
@@ -48,3 +50,4 @@ if __name__ == "__main__":
     print("="*100)
     print(result.get("job_desc"))
     print("="*100)
+    print(result.get("linkedin_profile"))

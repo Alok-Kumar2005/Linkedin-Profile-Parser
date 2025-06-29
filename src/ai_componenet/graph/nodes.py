@@ -15,7 +15,7 @@ from langchain_core.prompts import PromptTemplate
 def JobDescriptionNode(state: AgentState) -> AgentState:
     """Get the job description and store the important information data from that"""
     prompt = PromptTemplate(
-        template= jd_template,
+        template=jd_template,
         input_variables=["job_description"]
     )
     
@@ -24,14 +24,29 @@ def JobDescriptionNode(state: AgentState) -> AgentState:
     
     return AgentState(
         job_desc=state.job_desc,
-        jd_info=response
+        jd_info=response,
+        linkedin_profile=state.linkedin_profile
     )
 
 
-
-def LinkedInProfileNode(state: AgentState)->AgentState:
+def LinkedInProfileNode(state: AgentState) -> AgentState:
     """Get the linkedin profile of the user on the basis of the JD"""
-    urls = tavily_tool(state.get("job_title",""))
+    job_title = ""
+    if state.jd_info and hasattr(state.jd_info, 'job_title'):
+        job_title = state.jd_info.job_title
+    elif state.jd_info and hasattr(state.jd_info, 'title'):
+        job_title = state.jd_info.title
+    else:
+        job_title = "software engineer"  # right now going with software engineer
+    
+    print("="*100)
+    print(job_title)
+    print("="*100)
+    
+    urls = tavily_tool(job_title)
+    
     return AgentState(
-        linkedin_profile = urls
+        job_desc=state.job_desc,
+        jd_info=state.jd_info,
+        linkedin_profile=urls
     )
