@@ -10,3 +10,5 @@ fastapi
 uvicorn
 streamlit
 pypdf2
+sqlalchemy
+alembic
