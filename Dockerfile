@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     sqlite3 \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
@@ -34,12 +33,12 @@ RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 USER appuser
 
-# Expose port 7860 (required by Hugging Face Spaces)
-EXPOSE 7860
+# Expose port
+EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:7860/ || exit 1
+    CMD curl -f http://localhost:8000/ || exit 1
 
-# Command to run the application on port 7860
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Command to run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
