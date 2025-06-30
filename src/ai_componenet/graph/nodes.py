@@ -3,7 +3,9 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
+import re
 import logging
+from typing import Dict
 from langgraph.graph import StateGraph, START, END
 from src.ai_componenet.graph.state import AgentState
 from src.ai_componenet.get_llm import get_structured_llm, get_llm
@@ -255,6 +257,27 @@ def BestCandidateNode(state: AgentState) -> Dict[str, Any]:
         raise CustomException(e, sys) from e 
 
 
+def sanitize_outreach_message(message: str) -> str:
+    """
+    Sanitize outreach message to prevent JSON parsing issues.
+    """
+    if not message:
+        return ""
+    
+    # Remove excessive whitespace and normalize line endings
+    message = re.sub(r'\r\n|\r', '\n', message)
+    message = re.sub(r'\n{3,}', '\n\n', message)  # Limit consecutive newlines
+    message = re.sub(r'[ \t]+', ' ', message)     # Normalize spaces
+    
+    # Remove control characters except newlines and basic formatting
+    message = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', message)
+    
+    # Ensure proper escaping for JSON
+    message = message.replace('\\', '\\\\')
+    message = message.replace('"', '\\"')
+    
+    return message.strip()
+
 def generate_outreach_message(candidate_profile: str, job_desc: str, 
                             candidate_score: float, score_breakdown: Dict[str, float]) -> str:
     """Generate personalized outreach message for the best candidate"""
@@ -283,9 +306,13 @@ def generate_outreach_message(candidate_profile: str, job_desc: str,
         else:
             outreach_message = str(response)
         
-        logger.info("Outreach message successfully created")
+        # Sanitize the message before returning
+        outreach_message = sanitize_outreach_message(outreach_message)
+        
+        logger.info("Outreach message successfully created and sanitized")
         return outreach_message
         
     except Exception as e:
         logger.error(f"Error Occurred at generate_outreach_message function : {str(e)}")
-        raise CustomException(e, sys) from e
+        # Return a safe fallback message
+        return "Thank you for your interest in our position. We would like to discuss this opportunity with you further."

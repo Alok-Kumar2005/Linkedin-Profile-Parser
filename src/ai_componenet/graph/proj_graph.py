@@ -69,69 +69,70 @@ if __name__ == "__main__":
     
     # Run the workflow
     result = graph.invoke(initial_state)
+    print(result)
     
-    # Display results
-    print("="*50)
-    print("JOB DESCRIPTION:")
-    print("="*50)
-    print(result["job_desc"])
+    # # Display results
+    # print("="*50)
+    # print("JOB DESCRIPTION:")
+    # print("="*50)
+    # print(result["job_desc"])
     
-    print("\n" + "="*50)
-    print("PARSED JD INFO:")
-    print("="*50)
-    print(result["jd_info"])
+    # print("\n" + "="*50)
+    # print("PARSED JD INFO:")
+    # print("="*50)
+    # print(result["jd_info"])
     
-    print("\n" + "="*50)
-    print("LINKEDIN PROFILES FOUND:")
-    print("="*50)
-    print(result["linkedin_profile"])
+    # print("\n" + "="*50)
+    # print("LINKEDIN PROFILES FOUND:")
+    # print("="*50)
+    # print(result["linkedin_profile"])
 
-    print("\n" + "="*50)
-    print("LINKEDIN PROFILES COUNT:")
-    print("="*50)
-    print(result["profile_found"])
+    # print("\n" + "="*50)
+    # print("LINKEDIN PROFILES COUNT:")
+    # print("="*50)
+    # print(result["profile_found"])
     
-    print("\n" + "="*50)
-    print("CANDIDATE SCORES:")
-    print("="*50)
-    for i, score in enumerate(result["fit_score"]):
-        print(f"Candidate {i+1}: {score}/10")
+    # print("\n" + "="*50)
+    # print("CANDIDATE SCORES:")
+    # print("="*50)
+    # for i, score in enumerate(result["fit_score"]):
+    #     print(f"Candidate {i+1}: {score}/10")
     
-    print("\n" + "="*50)
-    print("BEST CANDIDATE:")
-    print("="*50)
-    print(f"Score: {result['best_candidate_score']}/10")
-    print(f"Breakdown: {result['best_candidate_breakdown']}")
+    # print("\n" + "="*50)
+    # print("BEST CANDIDATE:")
+    # print("="*50)
+    # print(f"Score: {result['best_candidate_score']}/10")
+    # print(f"Breakdown: {result['best_candidate_breakdown']}")
     
-    print("\n" + "="*50)
-    print("OUTREACH MESSAGE:")
-    print("="*50)
-    print(result["outreach_message"])
+    # print("\n" + "="*50)
+    # print("OUTREACH MESSAGE:")
+    # print("="*50)
+    # print(result["outreach_message"])
     
-    # Database queries examples
-    if result.get("job_id"):
-        print("\n" + "="*50)
-        print("DATABASE QUERY RESULTS:")
-        print("="*50)
+    # # Database queries examples
+    # if result.get("job_id"):
+    #     print("\n" + "="*50)
+    #     print("DATABASE QUERY RESULTS:")
+    #     print("="*50)
         
-        # Get job with candidates from database
-        job_data = DatabaseQueryUtils.get_job_with_candidates(result["job_id"])
-        if job_data:
-            print(f"Job Title: {job_data['job']['job_title']}")
-            print(f"Company: {job_data['job']['company_name']}")
-            print(f"Total Candidates: {len(job_data['candidates'])}")
+    #     # Get job with candidates from database
+    #     job_data = DatabaseQueryUtils.get_job_with_candidates(result["job_id"])
+    #     if job_data:
+    #         print(f"Job Title: {job_data['job']['job_title']}")
+    #         print(f"Company: {job_data['job']['company_name']}")
+    #         print(f"Total Candidates: {len(job_data['candidates'])}")
             
-            # Show best candidate from database
-            best_candidates = [c for c in job_data['candidates'] if c['is_best_candidate'] == 'Yes']
-            if best_candidates:
-                best = best_candidates[0]
-                print(f"Best Candidate Score: {best['final_score']}/10")
-                print(f"LinkedIn URL: {best['linkedin_url']}")
+    #         # Show best candidate from database
+    #         best_candidates = [c for c in job_data['candidates'] if c['is_best_candidate'] == 'Yes']
+    #         if best_candidates:
+    #             best = best_candidates[0]
+    #             print(f"Best Candidate Score: {best['final_score']}/10")
+    #             print(f"LinkedIn URL: {best['linkedin_url']}")
         
-        # Get statistics
-        stats = DatabaseQueryUtils.get_job_statistics()
-        print(f"\nDatabase Statistics:")
-        print(f"Total Jobs: {stats['total_jobs']}")
-        print(f"Total Candidates: {stats['total_candidates']}")
-        print(f"Best Candidates: {stats['best_candidates']}")
-        print(f"Average Score: {stats['average_final_score']}/10")
+    #     # Get statistics
+    #     stats = DatabaseQueryUtils.get_job_statistics()
+    #     print(f"\nDatabase Statistics:")
+    #     print(f"Total Jobs: {stats['total_jobs']}")
+    #     print(f"Total Candidates: {stats['total_candidates']}")
+    #     print(f"Best Candidates: {stats['best_candidates']}")
+    #     print(f"Average Score: {stats['average_final_score']}/10")
