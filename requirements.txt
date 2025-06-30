@@ -12,3 +12,6 @@ streamlit
 pypdf2
 sqlalchemy
 alembic
+fastapi
+uvicorn[standard]
+python-multipart
