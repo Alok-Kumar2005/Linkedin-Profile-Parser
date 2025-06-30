@@ -64,10 +64,11 @@ def LinkedInProfileNode(state: AgentState) -> Dict[str, Any]:
         if state.get("jd_info") and state["jd_info"].job_title:
             job_title = state["jd_info"].job_title
         
-        urls = tavily_tool(job_title)
+        urls, count = tavily_tool(job_title)
         
         return {
-            "linkedin_profile": urls
+            "linkedin_profile": urls,
+            "profile_found": count
         }
     except Exception as e:
         logger.error(f"Error Occurred at LinkedInProfileNode : {str(e)}")

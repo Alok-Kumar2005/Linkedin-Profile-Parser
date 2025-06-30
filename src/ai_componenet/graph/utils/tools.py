@@ -60,9 +60,10 @@ def tavily_tool(job_position: str, max_result: int = 5) -> List[str]:
             for item in result['results']:
                 if 'url' in item:
                     urls.append(item['url'])
-        logger.info("tavily tool Executed completed successfully   <------------")
+        count = len(urls)
+        logger.info(f"tavily tool Executed completed successfully and total  {count} profile found <------------")
         
-        return urls
+        return urls, count
     
     except CustomException as e:
         print(f"Error in tavily_tool: {e}")

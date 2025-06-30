@@ -56,6 +56,7 @@ if __name__ == "__main__":
         "jd_info": None,
         "job_id": None,
         "linkedin_profile": None,
+        "profile_found": None,
         "profile_data": None,
         "fit_score": None,
         "score_breakdown": None,
@@ -84,6 +85,11 @@ if __name__ == "__main__":
     print("LINKEDIN PROFILES FOUND:")
     print("="*50)
     print(result["linkedin_profile"])
+
+    print("\n" + "="*50)
+    print("LINKEDIN PROFILES COUNT:")
+    print("="*50)
+    print(result["profile_found"])
     
     print("\n" + "="*50)
     print("CANDIDATE SCORES:")

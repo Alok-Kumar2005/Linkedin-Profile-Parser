@@ -6,6 +6,7 @@ class AgentState(TypedDict):
     jd_info: Optional[JDInfo]
     job_id: Optional[int] 
     linkedin_profile: Optional[List[str]]
+    profile_found: Optional[int]
     profile_data: Optional[List[str]]
     fit_score: Optional[List[float]]
     score_breakdown: Optional[List[Dict[str, float]]]
