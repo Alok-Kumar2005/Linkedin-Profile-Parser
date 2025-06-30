@@ -11,6 +11,7 @@ uv venv
 uv add -r requirements.txt
 ```
 
+<<<<<<< HEAD
 ## Run file
 ```
 uvicorn main:app --reload
@@ -61,3 +62,5 @@ docker pull alok8090/linkedin-profile-parser:0.1.0
 - Using FastAPI for backend
 
 
+=======
+>>>>>>> 86a65621c27ad67eea329fe68cc4cfda912df84f

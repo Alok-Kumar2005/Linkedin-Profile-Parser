@@ -205,5 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+<<<<<<< HEAD
 logs/
 job_matching.db
+=======
+logs/
+>>>>>>> 86a65621c27ad67eea329fe68cc4cfda912df84f
